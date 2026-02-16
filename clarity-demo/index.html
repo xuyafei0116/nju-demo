@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clarity Demo</title>
+    <link rel="stylesheet" href="https://unpkg.com/@clr/ui@latest/clr-ui.min.css">
+    <style>
+        body {
+            background-color: #f4f5f8;
+            padding: 24px;
+        }
+        .main-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .back-link {
+            margin-bottom: 20px;
+            display: inline-block;
+        }
+        .section {
+            background: white;
+            border-radius: 4px;
+            padding: 24px;
+            margin-bottom: 24px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        .section h3 {
+            margin-bottom: 16px;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+    <div class="main-container">
+        <a href="../index.html" class="back-link">
+            <button class="btn btn-link">
+                <cds-icon shape="arrow" direction="left"></cds-icon>
+                返回主页
+            </button>
+        </a>
+
+        <h1>Clarity Design System Demo</h1>
+        <p class="p5">Clarity 是 VMware 开源的设计系统，提供现代化的 UI 组件。</p>
+
+        <div class="section">
+            <h3>按钮组件</h3>
+            <button class="btn btn-primary">主要按钮</button>
+            <button class="btn btn-secondary">次要按钮</button>
+            <button class="btn btn-success">成功按钮</button>
+            <button class="btn btn-danger">危险按钮</button>
+            <button class="btn btn-warning">警告按钮</button>
+        </div>
+
+        <div class="section">
+            <h3>表单组件</h3>
+            <form class="clr-form">
+                <div class="clr-form-control">
+                    <label class="clr-control-label">用户名</label>
+                    <div class="clr-control-container">
+                        <div class="clr-input-wrapper">
+                            <input type="text" class="clr-input" placeholder="请输入用户名">
+                        </div>
+                    </div>
+                </div>
+                <div class="clr-form-control">
+                    <label class="clr-control-label">邮箱</label>
+                    <div class="clr-control-container">
+                        <div class="clr-input-wrapper">
+                            <input type="email" class="clr-input" placeholder="请输入邮箱">
+                        </div>
+                    </div>
+                </div>
+                <div class="clr-form-control">
+                    <label class="clr-control-label">选择选项</label>
+                    <div class="clr-control-container">
+                        <select class="clr-select">
+                            <option>选项一</option>
+                            <option>选项二</option>
+                            <option>选项三</option>
+                        </select>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <div class="section">
+            <h3>卡片组件</h3>
+            <div class="clr-row">
+                <div class="clr-col-12 clr-col-md-4">
+                    <div class="card">
+                        <div class="card-header">卡片标题</div>
+                        <div class="card-block">
+                            <p class="card-text">这是一个 Clarity 卡片组件示例，展示了基本的卡片布局功能。</p>
+                        </div>
+                        <div class="card-footer">
+                            <button class="btn btn-sm btn-primary">操作</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="clr-col-12 clr-col-md-4">
+                    <div class="card">
+                        <div class="card-header">功能特性</div>
+                        <div class="card-block">
+                            <p class="card-text">Clarity 提供丰富的组件库，支持响应式设计和无障碍访问。</p>
+                        </div>
+                        <div class="card-footer">
+                            <button class="btn btn-sm btn-secondary">了解更多</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="clr-col-12 clr-col-md-4">
+                    <div class="card">
+                        <div class="card-header">开源项目</div>
+                        <div class="card-block">
+                            <p class="card-text">Clarity 是完全开源的，可以在 GitHub 上查看源码和贡献代码。</p>
+                        </div>
+                        <div class="card-footer">
+                            <button class="btn btn-sm btn-success">访问 GitHub</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h3>徽章组件</h3>
+            <span class="badge badge-info">信息</span>
+            <span class="badge badge-success">成功</span>
+            <span class="badge badge-warning">警告</span>
+            <span class="badge badge-danger">错误</span>
+        </div>
+
+        <div class="section">
+            <h3>警告提示</h3>
+            <div class="alert alert-info">
+                <div class="alert-items">
+                    <div class="alert-item static">
+                        <div class="alert-icon-wrapper">
+                            <cds-icon class="alert-icon" shape="info-circle"></cds-icon>
+                        </div>
+                        <span class="alert-text">这是一条信息提示。</span>
+                    </div>
+                </div>
+            </div>
+            <div class="alert alert-success">
+                <div class="alert-items">
+                    <div class="alert-item static">
+                        <div class="alert-icon-wrapper">
+                            <cds-icon class="alert-icon" shape="check-circle"></cds-icon>
+                        </div>
+                        <span class="alert-text">操作成功完成！</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://unpkg.com/@clr/icons@latest/clr-icons.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Canvas Demo</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+        .back-link {
+            display: inline-block;
+            margin-bottom: 20px;
+            color: white;
+            text-decoration: none;
+            padding: 8px 16px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 4px;
+            transition: background 0.3s;
+        }
+        .back-link:hover {
+            background: rgba(255,255,255,0.2);
+        }
+        h1 {
+            color: white;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        .section {
+            background: rgba(255,255,255,0.05);
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 24px;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        .section h2 {
+            color: #e94560;
+            margin-bottom: 16px;
+        }
+        canvas {
+            display: block;
+            border-radius: 8px;
+            background: #0f0f23;
+        }
+        .controls {
+            display: flex;
+            gap: 12px;
+            margin-top: 16px;
+            flex-wrap: wrap;
+        }
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: transform 0.2s, box-shadow 0.2s;
+            background: #e94560;
+            color: white;
+        }
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(233, 69, 96, 0.4);
+        }
+        .btn-secondary {
+            background: #0f3460;
+        }
+        .btn-secondary:hover {
+            box-shadow: 0 4px 12px rgba(15, 52, 96, 0.4);
+        }
+        .canvas-container {
+            position: relative;
+        }
+        #drawCanvas {
+            cursor: crosshair;
+        }
+        .color-picker {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+        .color-picker span {
+            color: white;
+            font-size: 14px;
+        }
+        .color-picker input {
+            width: 50px;
+            height: 36px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .brush-size {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+        .brush-size span {
+            color: white;
+            font-size: 14px;
+        }
+        .brush-size input {
+            width: 100px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="../index.html" class="back-link">← 返回主页</a>
+        <h1>HTML5 Canvas Demo</h1>
+        
+        <div class="section">
+            <h2>动画粒子效果</h2>
+            <canvas id="particleCanvas" width="900" height="300"></canvas>
+            <div class="controls">
+                <button class="btn" onclick="changeParticleColor()">改变颜色</button>
+                <button class="btn btn-secondary" onclick="toggleParticles()">暂停/继续</button>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>绘图板</h2>
+            <div class="canvas-container">
+                <canvas id="drawCanvas" width="900" height="300"></canvas>
+            </div>
+            <div class="controls">
+                <div class="color-picker">
+                    <span>画笔颜色:</span>
+                    <input type="color" id="brushColor" value="#e94560">
+                </div>
+                <div class="brush-size">
+                    <span>画笔大小:</span>
+                    <input type="range" id="brushSize" min="1" max="50" value="5">
+                </div>
+                <button class="btn btn-secondary" onclick="clearDrawCanvas()">清空画布</button>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>几何图形</h2>
+            <canvas id="shapeCanvas" width="900" height="300"></canvas>
+            <div class="controls">
+                <button class="btn" onclick="drawRandomShapes()">随机图形</button>
+                <button class="btn btn-secondary" onclick="clearShapeCanvas()">清空画布</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const particleCanvas = document.getElementById('particleCanvas')
+        const particleCtx = particleCanvas.getContext('2d')
+        const drawCanvas = document.getElementById('drawCanvas')
+        const drawCtx = drawCanvas.getContext('2d')
+        const shapeCanvas = document.getElementById('shapeCanvas')
+        const shapeCtx = shapeCanvas.getContext('2d')
+
+        let particles = []
+        let particleAnimationId = null
+        let particleRunning = true
+        let particleHue = 0
+
+        class Particle {
+            constructor() {
+                this.reset()
+            }
+
+            reset() {
+                this.x = Math.random() * particleCanvas.width
+                this.y = Math.random() * particleCanvas.height
+                this.size = Math.random() * 5 + 1
+                this.speedX = Math.random() * 2 - 1
+                this.speedY = Math.random() * 2 - 1
+                this.hue = particleHue + Math.random() * 60
+            }
+
+            update() {
+                this.x += this.speedX
+                this.y += this.speedY
+
+                if (this.x < 0 || this.x > particleCanvas.width) this.speedX *= -1
+                if (this.y < 0 || this.y > particleCanvas.height) this.speedY *= -1
+            }
+
+            draw() {
+                particleCtx.beginPath()
+                particleCtx.arc(this.x, this.y, this.size, 0, Math.PI * 2)
+                particleCtx.fillStyle = `hsla(${this.hue}, 100%, 60%, 0.8)`
+                particleCtx.fill()
+            }
+        }
+
+        function initParticles() {
+            particles = []
+            for (let i = 0; i < 100; i++) {
+                particles.push(new Particle())
+            }
+        }
+
+        function animateParticles() {
+            particleCtx.fillStyle = 'rgba(15, 15, 35, 0.1)'
+            particleCtx.fillRect(0, 0, particleCanvas.width, particleCanvas.height)
+
+            particles.forEach(particle => {
+                particle.update()
+                particle.draw()
+            })
+
+            for (let i = 0; i < particles.length; i++) {
+                for (let j = i + 1; j < particles.length; j++) {
+                    const dx = particles[i].x - particles[j].x
+                    const dy = particles[i].y - particles[j].y
+                    const distance = Math.sqrt(dx * dx + dy * dy)
+
+                    if (distance < 80) {
+                        particleCtx.beginPath()
+                        particleCtx.strokeStyle = `hsla(${particles[i].hue}, 100%, 60%, ${1 - distance / 80})`
+                        particleCtx.lineWidth = 0.5
+                        particleCtx.moveTo(particles[i].x, particles[i].y)
+                        particleCtx.lineTo(particles[j].x, particles[j].y)
+                        particleCtx.stroke()
+                    }
+                }
+            }
+
+            if (particleRunning) {
+                particleAnimationId = requestAnimationFrame(animateParticles)
+            }
+        }
+
+        function changeParticleColor() {
+            particleHue = Math.random() * 360
+            particles.forEach(p => p.hue = particleHue + Math.random() * 60)
+        }
+
+        function toggleParticles() {
+            particleRunning = !particleRunning
+            if (particleRunning) {
+                animateParticles()
+            }
+        }
+
+        initParticles()
+        animateParticles()
+
+        let isDrawing = false
+        let lastX = 0
+        let lastY = 0
+
+        drawCanvas.addEventListener('mousedown', (e) => {
+            isDrawing = true
+            const rect = drawCanvas.getBoundingClientRect()
+            lastX = e.clientX - rect.left
+            lastY = e.clientY - rect.top
+        })
+
+        drawCanvas.addEventListener('mousemove', (e) => {
+            if (!isDrawing) return
+
+            const rect = drawCanvas.getBoundingClientRect()
+            const x = e.clientX - rect.left
+            const y = e.clientY - rect.top
+
+            drawCtx.beginPath()
+            drawCtx.moveTo(lastX, lastY)
+            drawCtx.lineTo(x, y)
+            drawCtx.strokeStyle = document.getElementById('brushColor').value
+            drawCtx.lineWidth = document.getElementById('brushSize').value
+            drawCtx.lineCap = 'round'
+            drawCtx.lineJoin = 'round'
+            drawCtx.stroke()
+
+            lastX = x
+            lastY = y
+        })
+
+        drawCanvas.addEventListener('mouseup', () => isDrawing = false)
+        drawCanvas.addEventListener('mouseout', () => isDrawing = false)
+
+        function clearDrawCanvas() {
+            drawCtx.fillStyle = '#0f0f23'
+            drawCtx.fillRect(0, 0, drawCanvas.width, drawCanvas.height)
+        }
+        clearDrawCanvas()
+
+        function drawRandomShapes() {
+            clearShapeCanvas()
+
+            const colors = ['#e94560', '#0f3460', '#533483', '#16c79a', '#f9ed69']
+
+            for (let i = 0; i < 20; i++) {
+                const x = Math.random() * shapeCanvas.width
+                const y = Math.random() * shapeCanvas.height
+                const size = Math.random() * 60 + 20
+                const color = colors[Math.floor(Math.random() * colors.length)]
+                const shapeType = Math.floor(Math.random() * 4)
+
+                shapeCtx.fillStyle = color
+                shapeCtx.strokeStyle = color
+                shapeCtx.lineWidth = 3
+
+                switch (shapeType) {
+                    case 0:
+                        shapeCtx.beginPath()
+                        shapeCtx.arc(x, y, size / 2, 0, Math.PI * 2)
+                        shapeCtx.fill()
+                        break
+                    case 1:
+                        shapeCtx.fillRect(x - size / 2, y - size / 2, size, size)
+                        break
+                    case 2:
+                        shapeCtx.beginPath()
+                        shapeCtx.moveTo(x, y - size / 2)
+                        shapeCtx.lineTo(x + size / 2, y + size / 2)
+                        shapeCtx.lineTo(x - size / 2, y + size / 2)
+                        shapeCtx.closePath()
+                        shapeCtx.fill()
+                        break
+                    case 3:
+                        shapeCtx.beginPath()
+                        shapeCtx.moveTo(x - size / 2, y - size / 2)
+                        shapeCtx.lineTo(x + size / 2, y)
+                        shapeCtx.lineTo(x - size / 2, y + size / 2)
+                        shapeCtx.closePath()
+                        shapeCtx.stroke()
+                        break
+                }
+            }
+        }
+
+        function clearShapeCanvas() {
+            shapeCtx.fillStyle = '#0f0f23'
+            shapeCtx.fillRect(0, 0, shapeCanvas.width, shapeCanvas.height)
+        }
+        clearShapeCanvas()
+        drawRandomShapes()
+    </script>
+</body>
+</html>

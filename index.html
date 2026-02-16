@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NJU Demo 项目</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        h1 {
+            text-align: center;
+            color: white;
+            margin-bottom: 40px;
+            font-size: 2.5rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+        .demo-list {
+            display: grid;
+            gap: 20px;
+        }
+        .demo-card {
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .demo-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.3);
+        }
+        .demo-card h2 {
+            color: #333;
+            margin-bottom: 12px;
+            font-size: 1.5rem;
+        }
+        .demo-card p {
+            color: #666;
+            margin-bottom: 16px;
+            line-height: 1.6;
+        }
+        .demo-card a {
+            display: inline-block;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            text-decoration: none;
+            padding: 10px 24px;
+            border-radius: 6px;
+            font-weight: 500;
+            transition: opacity 0.3s ease;
+        }
+        .demo-card a:hover {
+            opacity: 0.9;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>NJU Demo 项目</h1>
+        <div class="demo-list">
+            <div class="demo-card">
+                <h2>Clarity Demo</h2>
+                <p>Clarity Design System 是 VMware 开源的设计系统，提供了一套高质量的 UI 组件和设计指南。此演示展示了 Clarity 组件的基本使用方法。</p>
+                <a href="./clarity-demo/index.html">查看演示</a>
+            </div>
+            <div class="demo-card">
+                <h2>Vue Demo</h2>
+                <p>Vue.js 是一个渐进式 JavaScript 框架，用于构建用户界面。此演示展示了 Vue.js 的核心功能和组件化开发方式。</p>
+                <a href="./vue-demo/index.html">查看演示</a>
+            </div>
+            <div class="demo-card">
+                <h2>Canvas Demo</h2>
+                <p>HTML5 Canvas 提供了强大的图形绘制能力。此演示展示了 Canvas API 的各种绘图功能，包括形状、动画和交互效果。</p>
+                <a href="./canvas-demo/index.html">查看演示</a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
